@@ -1,3 +1,77 @@
+# AI User Assistant
+
+Este módulo añade un asistente virtual inteligente a tu aplicación de Odoo para resolver dudas de los usuarios en tiempo real. El asistente cuenta con dos funciones principales: entender el contexto actual de la pantalla para explicar el uso de los módulos (campos específicos o flujos de trabajo) y buscar archivos adjuntos mediante filtros basados en lenguaje natural, detallando los pasos seguidos para encontrarlos.
+
+---
+
+## Índice
+
+1. [Descripción](#descripción)
+2. [Dependencias de Módulos](#dependencias-de-módulos)
+3. [Configuración Inicial](#configuración-inicial)
+   - [Parámetros del Sistema](#parámetros-del-sistema)
+   - [Permisos de Usuario](#permisos-de-usuario)
+4. [Funcionalidades](#funcionalidades)
+   - [Asistente Virtual](#asistente-virtual)
+   - [Historial de Mensajes](#historial-de-mensajes)
+5. [Ejemplos de Uso](#ejemplos-de-uso)
+6. [Posibles Fallos y Solución de Problemas](#posibles-fallos-y-solución-de-problemas)
+
+---
+
+## Descripción
+
+**AI User Assistant** actúa como un guía interactivo dentro de Odoo. Está diseñado para:
+- **Interactuar según el contexto:** Entiende en qué vista o formulario se encuentra el usuario y responde a preguntas sobre el funcionamiento de campos específicos o flujos completos del negocio.
+- **Búsqueda Avanzada de Adjuntos:** Filtra e indexa archivos adjuntos según las peticiones en lenguaje natural del usuario, mostrando los pasos lógicos que el sistema ha seguido para localizarlos.
+
+---
+
+## Dependencias de Módulos
+
+Para el correcto funcionamiento de todas las características avanzadas, el módulo requiere la instalación de complementos adicionales (Odoo nativo u OCA) que dotan a las vistas de capacidades especiales:
+
+* **Visualizador de contenido indexado (`odx_attachment_preview_kanban`):**
+  Por defecto, Odoo almacena el "Contenido indexado" de los adjuntos. Sin embargo, en documentos complejos como archivos `.pdf`, este contenido suele quedar como nulo o mostrar el texto `"application"`. Es estrictamente necesario instalar el módulo `odx_attachment_preview_kanban` para que el asistente pueda realizar consultas y filtrados precisos sobre el contenido interno de los archivos adjuntos.
+
+---
+
+## Configuración Inicial
+
+Para poner en marcha el asistente, un usuario administrador debe realizar la configuración de los parámetros del sistema y la asignación de permisos correspondientes.
+
+### Parámetros del Sistema
+
+Navega a **Ajustes → Técnico → Parámetros del sistema** y configura las siguientes claves de forma exacta:
+
+1. **Configurar la API Key:**
+   - **Clave:** *(Utilizar el nombre de clave técnica exacto provisto por el módulo, ej. `openai_api_key`)*
+   - **Valor:** Introduce tu clave API de **OpenAI** activa.
+2. **Contador de tokens:**
+   - **Clave:** *(Utilizar el nombre de clave técnica exacto provisto por el módulo, ej. `total_token_counter`)*
+   - **Valor:** `0` (Debe inicializarse obligatoriamente en cero para comenzar la estimación de costes y el control del consumo global de los usuarios).
+
+> ⚠️ **IMPORTANTE:** Las claves de los parámetros deben coincidir exactamente con la nomenclatura interna del módulo para que el sistema reconozca y aplique la configuración.
+
+### Permisos de Usuario
+
+Los grupos de permisos se instalan automáticamente con el módulo, pero la asignación a los usuarios no administradores es manual:
+
+1. Ve a **Ajustes → Gestionar usuarios → Usuarios**.
+2. Selecciona el usuario al que deseas conceder acceso.
+3. Activa la casilla o grupo de **Acceso al Asistente**. 
+*Sin este permiso, los usuarios no podrán visualizar los componentes del asistente en su interfaz.*
+
+---
+
+## Funcionalidades
+
+### Asistente Virtual
+
+- **Acceso:** Se despliega haciendo clic en el icono de la **varita mágica** (🪄) ubicado en la barra superior derecha de la aplicación Odoo.
+- **Interfaz de Chat:** Abre una ventana lateral de conversación interactiva. 
+- **Memoria por sesión:** El asistente tiene memoria contextual basada en el historial exclusivo con ese usuario específico. La memoria e información entre dos usuarios distintos nunca se comparte.
+- **Contador de tokens local:** En la parte inferior del cuadro de texto se muestra un indicador en tiempo real con los tokens consumidos durante la conversación actual.
 
 ### Historial de Mensajes
 
