@@ -1,0 +1,47 @@
+.o_ai_assistant_systray_item {
+    // position: relative;  <-- Ya no es necesario porque la ventana ahora es 'fixed' (flota libre por la pantalla)
+
+    .o_ai_assistant_chat_window {
+        // Quitamos position, top, right y width porque ahora los controla el JS al arrastrar
+        background: #ffffff;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        // z-index: 1050; <-- El JS ahora le pone 9999 para asegurar que nada lo tape
+        display: flex;
+        flex-direction: column;
+        cursor: default;
+
+        .chat-header {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .chat-body {
+            // El alto ahora lo tenemos limitado en el XML con max-height, pero puedes dejarlo aquí si prefieres un alto fijo
+            background-color: #f8f9fa;
+        }
+
+        /* --- ESTILOS DE LA RESPUESTA DE LA IA --- */
+        .message-content ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            list-style-type: disc;
+        }
+
+        .message-content li {
+            margin-bottom: 3px;
+        }
+
+        .message-content h4 {
+            color: #714B67; /* Púrpura corporativo de Odoo */
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .message-content b, .message-content strong {
+            font-weight: bold;
+            color: #00A09D; /* Turquesa de Odoo */
+        }
+    }
+}

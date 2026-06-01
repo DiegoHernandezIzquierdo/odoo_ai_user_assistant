@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ai_assistant_message_tree" model="ir.ui.view">
+            <field name="name">ai.assistant.message.tree</field>
+            <field name="model">ai.assistant.message</field>
+            <field name="arch" type="xml">
+                <tree string="Historial del Asistente IA" default_order="create_date asc" create="false" edit="false">
+                    <field name="create_date" string="Fecha y Hora"/>
+                    <field name="user_id" widget="many2one_avatar"/>
+                    <field name="role" decoration-info="role == 'user'" decoration-success="role == 'assistant'" widget="badge"/>
+                    <field name="content" string="Mensaje" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ai_assistant_message_form" model="ir.ui.view">
+            <field name="name">ai.assistant.message.form</field>
+            <field name="model">ai.assistant.message</field>
+            <field name="arch" type="xml">
+                <form string="Mensaje del Asistente" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                                <field name="role"/>
+                                <field name="create_date" string="Fecha"/>
+                            </group>
+                        </group>
+                        <group string="Contenido del Mensaje">
+                            <field name="content" nolabel="1" widget="html" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ai_assistant_message_search" model="ir.ui.view">
+            <field name="name">ai.assistant.message.search</field>
+            <field name="model">ai.assistant.message</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Mensajes">
+                    <field name="user_id"/>
+                    <field name="content" string="Contiene..."/>
+                    <filter string="Respuestas de IA" name="filter_assistant" domain="[('role', '=', 'assistant')]"/>
+                    <filter string="Preguntas de Usuarios" name="filter_user" domain="[('role', '=', 'user')]"/>
+                    <group expand="0" string="Agrupar por">
+                        <filter string="Usuario" name="group_user" context="{'group_by':'user_id'}"/>
+                        <filter string="Rol" name="group_role" context="{'group_by':'role'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ai_assistant_message" model="ir.actions.act_window">
+            <field name="name">Historial de Chat IA</field>
+            <field name="res_model">ai.assistant.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ai_assistant_message_search"/>
+        </record>
+
+        <menuitem id="menu_ai_assistant_root" 
+                  name="Asistente IA" 
+                  sequence="250" 
+                  groups="ai_user_assistant.group_ai_assistant_user"/>
+
+        <menuitem id="menu_ai_assistant_history" 
+                  name="Historial de Chat" 
+                  parent="menu_ai_assistant_root" 
+                  action="action_ai_assistant_message"
+                  groups="ai_user_assistant.group_ai_assistant_user"
+                  sequence="10"/>
+    </data>
+</odoo>

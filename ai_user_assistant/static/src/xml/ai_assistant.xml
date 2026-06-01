@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ai_user_assistant.SystrayIcon" owl="1">
+        
+        <div t-attf-class="o_ai_assistant_systray_item dropdown {{ state.hasAccess ? '' : 'd-none' }}">
+            
+            <a class="dropdown-toggle o-no-caret o-dropdown--narrow" 
+               role="button" 
+               t-on-click="toggleChat" 
+               title="Asistente IA Contextual">
+                <i class="fa fa-magic fa-fw" role="img" aria-label="IA Assistant"/>
+            </a>
+            
+            <div t-if="state.isOpen" class="o_ai_assistant_chat_window shadow-lg" t-att-style="windowStyle">
+                
+                <div class="chat-header text-bg-primary p-2 d-flex justify-content-between align-items-center"
+                     t-on-mousedown="onDragStart"
+                     style="cursor: grab; user-select: none;">
+                    <span class="fw-bold"><i class="fa fa-robot me-2"/>Asistente Odoo</span>
+                    <button class="btn btn-sm btn-close btn-close-white" t-on-click.stop="toggleChat" t-on-mousedown.stop=""></button>
+                </div>
+                
+                <div class="chat-body p-3" style="max-height: 400px; overflow-y: auto;">
+                    <t t-foreach="state.messages" t-as="msg" t-key="msg_index">
+                        <div t-attf-class="message mb-3 {{ msg.role === 'user' ? 'text-end' : 'text-start' }}">
+                            <div t-attf-class="badge text-wrap lh-base message-content {{ msg.role === 'user' ? 'bg-info text-dark' : 'bg-light text-dark border' }}"
+                                  style="text-align: left; font-size: 0.95em; display: inline-block; padding: 10px; max-width: 90%;">
+                                <t t-out="msg.content"/>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="state.isLoading" class="text-start text-muted small mt-2">
+                        <i class="fa fa-circle-o-notch fa-spin me-1"/> La IA está analizando la pantalla...
+                    </div>
+                </div>
+                
+                <div class="chat-footer p-2 border-top d-flex">
+                    <input type="text" 
+                           class="form-control form-control-sm me-2" 
+                           t-model="state.currentInput" 
+                           t-on-keyup="(e) => e.key === 'Enter' and sendMessage()"
+                           placeholder="Ej. ¿Para qué sirve esta vista?..."/>
+                           
+                    <button t-attf-class="btn btn-sm me-1 {{ state.isListening ? 'btn-danger' : 'btn-secondary' }}" 
+                            t-on-click="toggleVoiceRecognition" 
+                            t-att-disabled="state.isLoading"
+                            title="Hablar por micrófono">
+                        <i class="fa fa-microphone" t-attf-class="{{ state.isListening ? 'fa-beat-fade' : '' }}"/>
+                    </button>
+
+                    <button class="btn btn-primary btn-sm" t-on-click="sendMessage" t-att-disabled="state.isLoading">
+                        <i class="fa fa-paper-plane"/>
+                    </button>
+                </div>
+                
+                <div class="text-center text-muted pb-1" style="font-size: 0.7em; background-color: #f8f9fa;">
+                    Tokens consumidos esta sesión: <t t-esc="state.sessionTokens"/>
+                </div>
+                
+            </div>
+        </div>
+    </t>
+</templates>
